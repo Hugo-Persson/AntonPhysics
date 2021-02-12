@@ -3,12 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <script src="code.js"></script>
     <title>Document</title>
 </head>
-<h1>Physics simulation</h1>
-<body>
-    <form action="">
 
-    </form>
+<style>
+    #simulationCanvas{
+        border: solid black 1px;
+        height: 300px;
+        width: 100%;
+        margin-top: 30px;
+        
+    }
+</style>
+
+<h1>Physics simulation</h1>
+<body class="w-75 mx-auto">
+    <form onsubmit="startSimulation(event)">
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="m1">Mass for first object (kg)</label>
+                    <input type="number" class="form-control" id="m1" autocomplete="off" value="1"  placeholder="Enter a number">
+                  </div>
+            </div>
+            
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col">
+                <div class="form-group">
+                    <label for="M2">Mass for second object (kg)</label>
+                    <input type="number" class="form-control" id="m2" autocomplete="off" value="10000"  placeholder="Enter a number">
+                  </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="v1">Velocity for second object (m/s)</label>
+                    <input type="number" class="form-control" id="v2" value="-5" placeholder="Enter a number">
+                  </div>
+          
+            </div>
+            
+        </div>
+        
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+      </form>
+
+
+      <div id="simulationCanvas" class="collapse ">
+        <canvas class="w-100 h-100"></canvas>
+      </div>
+      
 </body>
 </html>
