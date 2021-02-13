@@ -11,8 +11,9 @@ var __assign = (this && this.__assign) || function () {
 };
 var m1;
 var m2;
-var s1 = 10;
-var s2 = 20;
+var s1 = 30;
+var s2 = 50;
+var initialV2;
 function startSimulation(e) {
     e.preventDefault();
     // Define input variables
@@ -20,6 +21,7 @@ function startSimulation(e) {
     var v1 = 0;
     m2 = Number(document.querySelector("#m2").value);
     var v2 = Number(document.querySelector("#v2").value);
+    initialV2 = v2;
     // Create an array of every collision, time and and speed post collision
     var collisions = [];
     var currentEllapsedTime = 0;
@@ -42,13 +44,16 @@ function startSimulation(e) {
         });
         //if (collisions.length > 10) break;
     }
-    animateCollision();
+    document.querySelector("#collisionCount").innerHTML =
+        "Collision count: " + collisions.length;
+    +"   See log for details";
+    animateCollision(collisions);
     console.log("Collisions", collisions);
 }
 function animateCollision(collisions) {
     var el = document.querySelector("#simulationCanvas");
     // @ts-ignore
-    new bootstrap.Collapse(el);
+    new bootstrap.Collapse(el, { show: true });
     var ctx = (document.querySelector("#simulationCanvas canvas")).getContext("2d");
     ctx.globalCompositeOperation = "destination-over";
     ctx.clearRect(0, 0, 300, 300); // clear canvas
@@ -56,10 +61,45 @@ function animateCollision(collisions) {
     ctx.strokeStyle = "rgba(0, 153, 255, 0.4)";
     ctx.save();
     //ctx.translate(150, 150);
+    ctx.fillStyle = "rgba(235, 64, 52,1)";
+    ctx.fillRect(30, 135, -10, 10);
+    ctx.fillStyle = "rgba(17, 187, 217,1)";
+    ctx.fillRect(50, 135, 10, 10);
+    animateBetweenPoints(30, 50, 0, initialV2, collisions[0].time, ctx);
+    collisions.map(function (e, index) {
+        setTimeout(function () {
+            console.log("First collision");
+            ctx.fillStyle = "rgba(235, 64, 52,1)";
+            ctx.clearRect(0, 0, 300, 300); // clear canvas
+            ctx.fillRect(e.s1, 135, -10, 10);
+            ctx.fillStyle = "rgba(17, 187, 217,1)";
+            ctx.fillRect(e.s2, 135, 10, 10);
+            var lastTime = 0;
+            if (index !== 0) {
+                lastTime = collisions[index - 1].time;
+            }
+            animateBetweenPoints(e.s1, e.s2, e.vp1, e.vp2, e.time - lastTime, ctx);
+        }, e.time * 1000);
+    });
     ctx.beginPath();
     ctx.moveTo(0, 0);
     ctx.lineTo(0, 150);
     ctx.stroke();
+}
+function animateBetweenPoints(s1, s2, v1, v2, time, ctx) {
+    var i = 0.05;
+    var startTime = Date.now();
+    while (i < time) {
+        setTimeout(function () {
+            var ellapsedTime = (Date.now() - startTime) / 1000; // Can not use i cause of scope issue
+            ctx.fillStyle = "rgba(235, 64, 52,1)";
+            ctx.clearRect(0, 0, 300, 300); // clear canvas
+            ctx.fillRect(s1 + v1 * ellapsedTime, 135, -10, 10);
+            ctx.fillStyle = "rgba(17, 187, 217,1)";
+            ctx.fillRect(s2 + v2 * ellapsedTime, 135, 10, 10);
+        }, i * 1000);
+        i += 0.05;
+    }
 }
 function calculatePointOfCollision(v1, v2) {
     var timeUntilWallCollision = -1;
